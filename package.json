@@ -1,0 +1,51 @@
+{
+  "name": "vue3_new_characteristic",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service serve"
+  },
+  "dependencies": {
+    "@vueuse/components": "^9.11.0",
+    "@vueuse/core": "^9.11.0",
+    "@vueuse/firebase": "^9.11.1",
+    "animate.css": "^4.1.1",
+    "axios": "^1.2.2",
+    "core-js": "^3.27.1",
+    "echarts": "^5.4.1",
+    "firebase": "^9.16.0",
+    "lodash": "^4.17.21",
+    "sha1": "^1.1.1",
+    "validator": "^13.7.0",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.3",
+    "vue3-seamless-scroll": "^2.0.1",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/eslint-parser": "^7.19.1",
+    "@vicons/antd": "^0.12.0",
+    "@vicons/carbon": "^0.12.0",
+    "@vicons/fa": "^0.12.0",
+    "@vicons/fluent": "^0.12.0",
+    "@vicons/ionicons4": "^0.12.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vicons/material": "^0.12.0",
+    "@vicons/tabler": "^0.12.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^9.9.0",
+    "naive-ui": "^2.34.3",
+    "prettier": "^2.8.2",
+    "sass": "^1.32.7",
+    "sass-loader": "^13.2.0"
+  }
+}
