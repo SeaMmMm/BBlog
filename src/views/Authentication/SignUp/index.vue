@@ -4,8 +4,10 @@ import { THEME_STORE } from '@/store/constant'
 import {
   createAuthUserWithEmailAndPassword,
   signInWithGithubPopup,
-  signInWithGooglePopup
+  signInWithGooglePopup,
+  createUserDocumentFromAuth
 } from '@/utils/firebase'
+import { User } from '@vicons/tabler'
 import { LogoGoogle, UserAdmin } from '@vicons/carbon'
 import {
   Password20Regular,
@@ -28,6 +30,7 @@ const message = useMessage()
 
 const formValue = reactive({
   user: {
+    displayName: '',
     email: '',
     password: ''
   }
@@ -74,10 +77,16 @@ const handleValidateClick = e => {
     isLoading.value = true
     if (!errors) {
       try {
-        await createAuthUserWithEmailAndPassword(
+        const { user } = await createAuthUserWithEmailAndPassword(
           formValue.user.email,
           formValue.user.password
         )
+        await createUserDocumentFromAuth(user, {
+          displayName: formValue.user.displayName
+        })
+
+        resetForm()
+
         message.success('创建成功!', {
           icon: () => h(NIcon, null, { default: () => h(UserAdmin) })
         })
@@ -96,6 +105,12 @@ const handleValidateClick = e => {
     isLoading.value = false
   })
 }
+const resetForm = () => {
+  const { user } = formValue
+  user.email = ''
+  user.password = ''
+  user.displayName = ''
+}
 const LoginWithGoogle = async () => await signInWithGooglePopup()
 const LoginWithGithub = async () => await signInWithGithubPopup()
 </script>
@@ -105,7 +120,6 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
     <div class="lcontent">
       <n-image
         :src="man"
-        lazy
         preview-disabled
         :height="500"
         style="pointer-events: none"
@@ -139,6 +153,18 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
               ref="formRef"
               class="form"
             >
+              <n-form-item label="用户名">
+                <n-input
+                  v-model:value="formValue.user.displayName"
+                  round
+                  clearable
+                  placeholder="name"
+                >
+                  <template #prefix>
+                    <n-icon :component="User" />
+                  </template>
+                </n-input>
+              </n-form-item>
               <n-form-item label="邮箱" path="user.email">
                 <n-input
                   v-model:value="formValue.user.email"

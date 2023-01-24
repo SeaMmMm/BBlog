@@ -67,6 +67,9 @@ const handleValidateClick = async e => {
           formValue.user.email,
           formValue.user.password
         )
+
+        resetForm()
+
         message.success('登录成功', {
           icon: () =>
             h(NIcon, null, { default: () => h(CheckmarkDoneCircleOutline) })
@@ -85,6 +88,12 @@ const handleValidateClick = async e => {
     }
     isLoading.value = false
   })
+}
+
+const resetForm = () => {
+  const { user } = formValue
+  user.email = ''
+  user.password = ''
 }
 const LoginWithGoogle = async () => await signInWithGooglePopup()
 const LoginWithGithub = async () => await signInWithGithubPopup()
@@ -168,7 +177,6 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
       </Transition>
       <n-image
         :src="woman"
-        lazy
         preview-disabled
         :height="500"
         style="pointer-events: none"
