@@ -36,6 +36,7 @@ export const setUpRouter = router => {
   /* eslint-disable */
   router.afterEach((to, from) => {
     setTitle(to)
+
     /* 将在 2 秒后运行该函数的挂钩。 */
     const { start, stop } = useTimeoutFn(() => {
       setTitle(to)
@@ -45,6 +46,7 @@ export const setUpRouter = router => {
 
     to.meta.transition = 'fade'
 
+    /* 监视文档可见性的挂钩。如果文档可见且之前的状态隐藏，则文档标题设置为“🎉🎉🎉Welcome Back”并调用启动函数。如果文档是隐藏的并且之前的状态是可见的，则调用停止函数并将文档标题设置为“Always here °꒰๑'ꀾ'๑꒱°”。 */
     watch(visibility, (current, previous) => {
       if (current === 'visible' && previous === 'hidden') {
         document.title = '🎉🎉🎉Welcome Back'

@@ -15,6 +15,8 @@ import {
 } from '@vicons/ionicons5'
 import { BrandGithub, UserExclamation } from '@vicons/tabler'
 import { NIcon, useMessage } from 'naive-ui'
+import isEmail from 'validator/es/lib/isEmail'
+import isEmpty from 'validator/es/lib/isEmpty'
 import { computed, h, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 
@@ -29,28 +31,60 @@ const formValue = reactive({
     password: ''
   }
 })
+const rules = reactive({
+  user: {
+    email: {
+      required: true,
+      trigger: 'blur',
+      asyncValidator: (rule, value) => {
+        return new Promise((resolve, reject) => {
+          if (isEmail(value)) {
+            resolve()
+          } else if (isEmpty(value)) {
+            reject('请输入邮箱')
+          } else {
+            reject('邮箱不合法')
+          }
+        })
+      }
+    },
+    password: {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur'
+    }
+  }
+})
 const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
 const handleValidateClick = async e => {
   e.preventDefault()
-  isLoading.value = true
-  try {
-    await signInAuthUserWithEmailAndPassword(
-      formValue.user.email,
-      formValue.user.password
-    )
-    message.success('登录成功', {
-      icon: () =>
-        h(NIcon, null, { default: () => h(CheckmarkDoneCircleOutline) })
-    })
-  } catch (error) {
-    if (error.code === 'auth/user-not-found') {
-      message.error('用户不存在', {
-        icon: () => h(NIcon, null, { default: () => h(UserExclamation) })
-      })
+  formRef.value?.validate(async errors => {
+    isLoading.value = true
+    if (!errors) {
+      try {
+        await signInAuthUserWithEmailAndPassword(
+          formValue.user.email,
+          formValue.user.password
+        )
+        message.success('登录成功', {
+          icon: () =>
+            h(NIcon, null, { default: () => h(CheckmarkDoneCircleOutline) })
+        })
+      } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+          message.error('用户不存在', {
+            icon: () => h(NIcon, null, { default: () => h(UserExclamation) })
+          })
+        } else {
+          message.error(error.code, {
+            icon: () => h(NIcon, null, { default: () => h(UserExclamation) })
+          })
+        }
+      }
     }
-  }
-  isLoading.value = false
+    isLoading.value = false
+  })
 }
 const LoginWithGoogle = async () => await signInWithGooglePopup()
 const LoginWithGithub = async () => await signInWithGithubPopup()
@@ -81,7 +115,12 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
               />
             </div>
             <n-text type="info">or</n-text>
-            <n-form :model="formValue" ref="formRef" class="form">
+            <n-form
+              :rules="rules"
+              :model="formValue"
+              ref="formRef"
+              class="form"
+            >
               <n-form-item label="邮箱" path="user.email">
                 <n-input
                   v-model:value="formValue.user.email"
