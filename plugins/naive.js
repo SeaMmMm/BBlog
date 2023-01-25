@@ -34,12 +34,14 @@ import {
   NResult,
   NFormItem,
   NInput,
-  NForm
+  NForm,
+  NBackTop
 } from 'naive-ui'
 
 const naive = create({
   components: [
     NResult,
+    NBackTop,
     NFormItem,
     NForm,
     NInput,

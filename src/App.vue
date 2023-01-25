@@ -1,6 +1,5 @@
 <script setup>
 import { THEME_STORE } from '@/store/constant'
-import Navigationbar from '@/views/Header/NavigationBar.vue'
 
 //导入的是全局主题和语言设置
 import {
@@ -33,7 +32,6 @@ const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
           :class="theme === 'white' ? 'globalWhiteStyle' : 'globalDarkStyle'"
           class="globalDefault"
         >
-          <Navigationbar />
           <router-view v-slot="{ Component, route }">
             <Transition
               mode="out-in"

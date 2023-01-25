@@ -64,55 +64,59 @@ const railStyle = ({ focused, checked }) => {
 </script>
 
 <template>
-  <div class="topWrapper" :class="themeModel === 'white' ? 'white' : 'dark'">
-    <!-- 图标 -->
-    <router-link to="/">
-      <IconComponent :size="25" class="icon" />
-    </router-link>
+  <div>
+    <div class="topWrapper" :class="themeModel === 'white' ? 'white' : 'dark'">
+      <!-- 图标 -->
+      <router-link to="/">
+        <IconComponent :size="25" class="icon" />
+      </router-link>
 
-    <!-- 顶部文字 -->
-    <div class="topTitle">
-      <n-button
-        text
-        v-for="el in linkTxt"
-        @click="router.push(el.to)"
-        :key="el.title"
-        style="font-weight: 900; font-size: 16px"
-      >
-        {{ el.title }}
-      </n-button>
-    </div>
+      <!-- 顶部文字 -->
+      <div class="topTitle">
+        <n-button
+          text
+          v-for="el in linkTxt"
+          @click="router.push(el.to)"
+          :key="el.title"
+          style="font-weight: 900; font-size: 16px"
+        >
+          {{ el.title }}
+        </n-button>
+      </div>
 
-    <!-- 按钮 -->
-    <div class="auth">
-      <n-button type="primary" strong @click="goto(_, '/login')">
-        <template #icon>
-          <n-icon>
-            <md-log-in />
-          </n-icon>
-        </template>
-        Login
-      </n-button>
-      <n-button type="info" dashed strong @click="goto(_, '/signup')">
-        <template #icon>
-          <n-icon>
-            <supervised-user-circle-twotone />
-          </n-icon>
-        </template>
-        SignUp
-      </n-button>
-      <div>
-        <n-divider vertical />
-        <n-switch v-model:value="theme" :rail-style="railStyle">
-          <template #unchecked-icon>
-            <n-icon :component="WeatherSunnyLow24Regular" />
+      <!-- 按钮 -->
+      <div class="auth">
+        <n-button type="primary" strong @click="goto(_, '/login')">
+          <template #icon>
+            <n-icon>
+              <md-log-in />
+            </n-icon>
           </template>
-          <template #checked-icon>
-            <n-icon :component="DarkModeTwotone" />
+          Login
+        </n-button>
+        <n-button type="info" dashed strong @click="goto(_, '/signup')">
+          <template #icon>
+            <n-icon>
+              <supervised-user-circle-twotone />
+            </n-icon>
           </template>
-        </n-switch>
+          SignUp
+        </n-button>
+        <div>
+          <n-divider vertical />
+          <n-switch v-model:value="theme" :rail-style="railStyle">
+            <template #unchecked-icon>
+              <n-icon :component="WeatherSunnyLow24Regular" />
+            </template>
+            <template #checked-icon>
+              <n-icon :component="DarkModeTwotone" />
+            </template>
+          </n-switch>
+        </div>
       </div>
     </div>
+    <router-view />
+    <n-back-top :right="100" />
   </div>
 </template>
 
@@ -129,8 +133,6 @@ const railStyle = ({ focused, checked }) => {
   backdrop-filter: blur(10px);
   grid-template-columns: repeat(3, auto);
   z-index: 100;
-  position: fixed;
-  width: 100%;
   justify-items: center;
   align-items: center;
   .icon {

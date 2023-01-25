@@ -22,11 +22,13 @@ import isEmpty from 'validator/es/lib/isEmpty'
 import isStrongPassword from 'validator/es/lib/isStrongPassword'
 import { computed, h, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 const formRef = ref(null)
 const store = useStore()
 const isLoading = ref(false)
 const message = useMessage()
+const router = useRouter()
 
 const formValue = reactive({
   user: {
@@ -73,6 +75,7 @@ const rules = ref({
 
 const handleValidateClick = e => {
   e.preventDefault()
+
   formRef.value?.validate(async errors => {
     isLoading.value = true
     if (!errors) {
@@ -104,6 +107,8 @@ const handleValidateClick = e => {
     }
     isLoading.value = false
   })
+
+  router.push('/login')
 }
 const resetForm = () => {
   const { user } = formValue
@@ -119,6 +124,7 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
   <div class="lwrapper" :class="theme === 'dark' && 'darkBg'">
     <div class="lcontent">
       <n-image
+        lazy
         :src="man"
         preview-disabled
         :height="500"
@@ -243,7 +249,7 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
         display: flex;
         flex-direction: column;
         gap: 16px;
-        align-items: flex-start;
+        align-items: center;
 
         .form {
           display: grid;

@@ -24,7 +24,7 @@
  * @Author       : Seaming
  * @Date         : 2023-01-23
  * @LastEditors  : Seaming
- * @LastEditTime : 2023-01-24
+ * @LastEditTime : 2023-01-25
  * @FilePath     : /BBlog/src/utils/firebase.js
  * @Description  : firebase使用
  *
@@ -81,6 +81,18 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 export const signInWithGithubPopup = () => signInWithPopup(auth, githubProvider)
 
 /**
+ * 它返回使用 auth 对象、电子邮件和密码调用 signInWithEmailAndPassword 函数的结果
+ * @param email - 用户的电子邮件地址。
+ * @param password - 用户的密码。
+ * @returns 解析为用户对象的承诺。
+ */
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return
+
+  return await signInWithEmailAndPassword(auth, email, password)
+}
+
+/**
  * 它使用给定的电子邮件和密码创建一个新用户
  * @param email - 要创建的用户的电子邮件地址。
  * @param password - 用户的密码。
@@ -120,18 +132,6 @@ export const createUserDocumentFromAuth = async (
     })
   }
   return userDocRef
-}
-
-/**
- * 它返回使用 auth 对象、电子邮件和密码调用 signInWithEmailAndPassword 函数的结果
- * @param email - 用户的电子邮件地址。
- * @param password - 用户的密码。
- * @returns 解析为用户对象的承诺。
- */
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return
-
-  return await signInWithEmailAndPassword(auth, email, password)
 }
 
 /**

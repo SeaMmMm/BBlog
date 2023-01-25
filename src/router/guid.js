@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { THEME_STORE } from '@/store/constant'
 import { createDiscreteApi, darkTheme, lightTheme } from 'naive-ui'
 import { computed, watch } from 'vue'
 import store from '@/store'
 import { useDocumentVisibility, useTimeoutFn } from '@vueuse/core'
+import { auth } from '@/utils/firebase'
+import { useAuth } from '@vueuse/firebase/useAuth'
 
 const getTheme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
@@ -23,17 +26,23 @@ export const setUpRouter = router => {
   }))
 
   /* 一种创建加载栏的方法。,在setup函数外部使用 */
-  const { loadingBar } = createDiscreteApi(['loadingBar'], {
+  const { loadingBar, message } = createDiscreteApi(['loadingBar', 'message'], {
     configProviderProps: configProviderPropsRef
   })
 
   /* 路由器挂钩。 */
-  router.beforeEach(() => {
+  router.beforeEach((to, from) => {
+    const { isAuthenticated } = useAuth(auth)
     // 显示加载条
     loadingBar?.start()
+    if (to.meta.requiresAuth) {
+      if (!isAuthenticated.value) {
+        message.error('请登录')
+        return '/login'
+      }
+    }
   })
 
-  /* eslint-disable */
   router.afterEach((to, from) => {
     setTitle(to)
 

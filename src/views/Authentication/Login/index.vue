@@ -19,11 +19,13 @@ import isEmail from 'validator/es/lib/isEmail'
 import isEmpty from 'validator/es/lib/isEmpty'
 import { computed, h, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 const formRef = ref(null)
 const store = useStore()
 const message = useMessage()
 const isLoading = ref(false)
+const router = useRouter()
 
 const formValue = reactive({
   user: {
@@ -59,6 +61,7 @@ const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
 const handleValidateClick = async e => {
   e.preventDefault()
+
   formRef.value?.validate(async errors => {
     isLoading.value = true
     if (!errors) {
@@ -88,6 +91,8 @@ const handleValidateClick = async e => {
     }
     isLoading.value = false
   })
+
+  router.push('/user')
 }
 
 const resetForm = () => {
@@ -176,6 +181,7 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
         </div>
       </Transition>
       <n-image
+        lazy
         :src="woman"
         preview-disabled
         :height="500"
@@ -187,10 +193,10 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
 
 <style lang="scss" scoped>
 .darkForm {
-  background: #1f3134 !important;
+  background: #1685a9 !important;
 }
 .darkBg {
-  background: #80989b;
+  background: #4b5cc4;
 }
 
 .lwrapper {
@@ -213,7 +219,7 @@ const LoginWithGithub = async () => await signInWithGithubPopup()
         display: flex;
         flex-direction: column;
         gap: 16px;
-        align-items: flex-start;
+        align-items: center;
 
         .form {
           display: grid;
