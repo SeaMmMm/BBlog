@@ -1,7 +1,8 @@
 <script setup>
 import woman from '@/assets/loginwoman.svg'
-import { THEME_STORE } from '@/store/constant'
+import { THEME_STORE, USER_STORE } from '@/store/constant'
 import {
+  createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
   signInWithGithubPopup,
   signInWithGooglePopup
@@ -18,8 +19,8 @@ import { NIcon, useMessage } from 'naive-ui'
 import isEmail from 'validator/es/lib/isEmail'
 import isEmpty from 'validator/es/lib/isEmpty'
 import { computed, h, reactive, ref } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const formRef = ref(null)
 const store = useStore()
@@ -59,6 +60,9 @@ const rules = reactive({
 })
 const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
+const setCurrentUser = payload =>
+  store.commit(USER_STORE.SET_CURRENT_USER, payload)
+
 const handleValidateClick = async e => {
   e.preventDefault()
 
@@ -66,13 +70,15 @@ const handleValidateClick = async e => {
     isLoading.value = true
     if (!errors) {
       try {
-        await signInAuthUserWithEmailAndPassword(
+        const { user } = await signInAuthUserWithEmailAndPassword(
           formValue.user.email,
           formValue.user.password
         )
-
+        setCurrentUser(user)
+        await createUserDocumentFromAuth(user)
         resetForm()
 
+        router.push('/user')
         message.success('登录成功', {
           icon: () =>
             h(NIcon, null, { default: () => h(CheckmarkDoneCircleOutline) })
@@ -91,8 +97,6 @@ const handleValidateClick = async e => {
     }
     isLoading.value = false
   })
-
-  router.push('/user')
 }
 
 const resetForm = () => {
@@ -100,8 +104,24 @@ const resetForm = () => {
   user.email = ''
   user.password = ''
 }
-const LoginWithGoogle = async () => await signInWithGooglePopup()
-const LoginWithGithub = async () => await signInWithGithubPopup()
+const LoginWithGoogle = async () => {
+  try {
+    const { user } = await signInWithGooglePopup()
+    setCurrentUser(user)
+    await createUserDocumentFromAuth(user)
+  } catch (error) {
+    message.error(error.code)
+  }
+}
+const LoginWithGithub = async () => {
+  try {
+    const { user } = await signInWithGithubPopup()
+    setCurrentUser(user)
+    await createUserDocumentFromAuth(user)
+  } catch (error) {
+    message.error(error.code)
+  }
+}
 </script>
 
 <template>

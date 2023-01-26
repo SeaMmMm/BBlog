@@ -1,6 +1,6 @@
 <script setup>
 import man from '@/assets/signupman.svg'
-import { THEME_STORE } from '@/store/constant'
+import { THEME_STORE, USER_STORE } from '@/store/constant'
 import {
   createAuthUserWithEmailAndPassword,
   signInWithGithubPopup,
@@ -38,6 +38,8 @@ const formValue = reactive({
   }
 })
 const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
+const setCurrentUser = payload =>
+  store.commit(USER_STORE.SET_CURRENT_USER, payload)
 const rules = ref({
   user: {
     email: {
@@ -84,12 +86,13 @@ const handleValidateClick = e => {
           formValue.user.email,
           formValue.user.password
         )
+
         await createUserDocumentFromAuth(user, {
           displayName: formValue.user.displayName
         })
-
         resetForm()
 
+        router.push('/login')
         message.success('创建成功!', {
           icon: () => h(NIcon, null, { default: () => h(UserAdmin) })
         })
@@ -107,8 +110,6 @@ const handleValidateClick = e => {
     }
     isLoading.value = false
   })
-
-  router.push('/login')
 }
 const resetForm = () => {
   const { user } = formValue
@@ -116,8 +117,24 @@ const resetForm = () => {
   user.password = ''
   user.displayName = ''
 }
-const LoginWithGoogle = async () => await signInWithGooglePopup()
-const LoginWithGithub = async () => await signInWithGithubPopup()
+const LoginWithGoogle = async () => {
+  try {
+    const { user } = await signInWithGooglePopup()
+    setCurrentUser(user)
+    await createUserDocumentFromAuth(user)
+  } catch (error) {
+    message.error(error.code)
+  }
+}
+const LoginWithGithub = async () => {
+  try {
+    const { user } = await signInWithGithubPopup()
+    setCurrentUser(user)
+    await createUserDocumentFromAuth(user)
+  } catch (error) {
+    message.error(error.code)
+  }
+}
 </script>
 
 <template>

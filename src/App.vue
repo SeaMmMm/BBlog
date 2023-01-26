@@ -1,5 +1,5 @@
 <script setup>
-import { THEME_STORE } from '@/store/constant'
+import { THEME_STORE, USER_STORE } from '@/store/constant'
 
 //导入的是全局主题和语言设置
 import {
