@@ -109,6 +109,8 @@ const LoginWithGoogle = async () => {
     const { user } = await signInWithGooglePopup()
     setCurrentUser(user)
     await createUserDocumentFromAuth(user)
+    router.push('/user')
+    message.success('log in succeed')
   } catch (error) {
     message.error(error.code)
   }
@@ -118,6 +120,8 @@ const LoginWithGithub = async () => {
     const { user } = await signInWithGithubPopup()
     setCurrentUser(user)
     await createUserDocumentFromAuth(user)
+    router.push('/user')
+    message.success('log in succeed')
   } catch (error) {
     message.error(error.code)
   }

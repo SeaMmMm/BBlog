@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
+import store from '@/store'
 import { THEME_STORE, USER_STORE } from '@/store/constant'
+import { auth } from '@/utils/firebase'
+import { useDocumentVisibility, useTimeoutFn } from '@vueuse/core'
+import { useAuth } from '@vueuse/firebase/useAuth'
 import { createDiscreteApi, darkTheme, lightTheme } from 'naive-ui'
 import { computed, watch } from 'vue'
-import store from '@/store'
-import { useDocumentVisibility, useTimeoutFn } from '@vueuse/core'
 
 const Theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
+const getUser = computed(() => store.getters[USER_STORE.GET_CURRENT_USER])
 
 // 使用文档可见性
 const visibility = useDocumentVisibility()
@@ -28,17 +31,18 @@ export const setUpRouter = router => {
     configProviderProps: configProviderPropsRef
   })
 
+  /* 一个返回布尔值的挂钩，该值指示用户是否已通过身份验证。 */
+  const { isAuthenticated } = useAuth(auth)
+
   /* 路由器挂钩。 */
   router.beforeEach((to, from) => {
     // 显示加载条
     loadingBar?.start()
     if (to.meta.requiresAuth) {
-      const CurrentUser = computed(
-        () => store.getters[USER_STORE.GET_CURRENT_USER]
-      )
-      console.log(CurrentUser.value)
-      // message.error('请登录')
-      // return '/login'
+      if (!isAuthenticated.value) {
+        message.error('请登录')
+        return '/login'
+      }
     }
   })
 

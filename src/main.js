@@ -4,6 +4,7 @@ import naive from '../plugins/naive'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { USER_STORE } from './store/constant'
 import 'animate.css' //引入animate.css
 
 import { initializeApp } from 'firebase/app'
@@ -24,7 +25,7 @@ initializeApp(firebaseConfig)
 const auth = getAuth()
 let app = null
 
-onAuthStateChanged(auth, () => {
+onAuthStateChanged(auth, user => {
   if (!app) {
     app = createApp(App)
     app.use(naive)
@@ -33,4 +34,5 @@ onAuthStateChanged(auth, () => {
     app.use(router)
     app.mount('#app')
   }
+  store.commit(USER_STORE.SET_CURRENT_USER, user)
 })

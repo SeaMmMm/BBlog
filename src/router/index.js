@@ -8,6 +8,11 @@ const NotFound = () => import('@/views/NotFound')
 const Userpage = () => import('@/views/User')
 const NavigationBar = () => import('@/views/Header/NavigationBar.vue')
 
+const UserHome = () => import('@/views/User/Home')
+const UserInfo = () => import('@/views/User/Info')
+const UserMessage = () => import('@/views/User/Message')
+const UserBlog = () => import('@/views/User/Blog')
+
 const routes = [
   {
     path: '/',
@@ -19,7 +24,7 @@ const routes = [
     redirect: '/home',
     children: [
       {
-        path: '/home',
+        path: 'home',
         component: HomePage,
         meta: {
           name: 'Home',
@@ -27,7 +32,7 @@ const routes = [
         }
       },
       {
-        path: '/login',
+        path: 'login',
         component: LoginPage,
         meta: {
           name: 'LogIn',
@@ -35,7 +40,7 @@ const routes = [
         }
       },
       {
-        path: '/signup',
+        path: 'signup',
         component: SignUpPage,
         meta: {
           name: 'SignUp',
@@ -48,10 +53,45 @@ const routes = [
     path: '/user',
     name: 'User',
     component: Userpage,
+    redirect: '/user/home',
     meta: {
       name: 'User',
       requiresAuth: true
-    }
+    },
+    children: [
+      {
+        path: 'home',
+        component: UserHome,
+        meta: {
+          name: '主页',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'info',
+        component: UserInfo,
+        meta: {
+          name: '信息',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'blog',
+        component: UserBlog,
+        meta: {
+          name: '所有博客',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'message',
+        component: UserMessage,
+        meta: {
+          name: '个人信息',
+          requiresAuth: true
+        }
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',

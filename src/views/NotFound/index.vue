@@ -30,7 +30,7 @@ const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
           a page that either has been deleted or never been existed</n-p
         >
         <div class="button" @click="gotoHome">
-          <n-text type="default">Go Back</n-text>
+          <n-text type="default">Go Home</n-text>
         </div>
       </div>
       <NotFoundImage :size="600" />
