@@ -63,11 +63,12 @@ const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease-in-out;
+  transition: all 0.2s;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  filter: blur(1rem);
 }
 </style>

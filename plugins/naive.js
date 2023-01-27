@@ -38,16 +38,14 @@ import {
   NBackTop,
   NMenu,
   NLayout,
-  NLayoutSider,
-  NLayoutHeader,
-  NLayoutContent
+  NAvatar,
+  NDropdown
 } from 'naive-ui'
 
 const naive = create({
   components: [
-    NLayoutSider,
-    NLayoutContent,
-    NLayoutHeader,
+    NAvatar,
+    NDropdown,
     NResult,
     NLayout,
     NMenu,
