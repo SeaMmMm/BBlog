@@ -16,6 +16,7 @@ import {
 } from '@vicons/ionicons5'
 import { BrandGithub, UserExclamation } from '@vicons/tabler'
 import { NIcon, useMessage } from 'naive-ui'
+import sha1 from 'sha1'
 import isEmail from 'validator/es/lib/isEmail'
 import isEmpty from 'validator/es/lib/isEmpty'
 import { computed, h, reactive, ref } from 'vue'
@@ -28,12 +29,15 @@ const message = useMessage()
 const isLoading = ref(false)
 const router = useRouter()
 
+// 用于提交的表单
 const formValue = reactive({
   user: {
     email: '',
     password: ''
   }
 })
+
+// 用于验证邮箱和密码是否符合标准
 const rules = reactive({
   user: {
     email: {
@@ -58,6 +62,7 @@ const rules = reactive({
     }
   }
 })
+
 const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
 const setCurrentUser = payload =>
@@ -72,7 +77,7 @@ const handleValidateClick = async e => {
       try {
         const { user } = await signInAuthUserWithEmailAndPassword(
           formValue.user.email,
-          formValue.user.password
+          sha1(formValue.user.password)
         )
         setCurrentUser(user)
         await createUserDocumentFromAuth(user)
@@ -99,6 +104,7 @@ const handleValidateClick = async e => {
   })
 }
 
+// 初始化表单
 const resetForm = () => {
   const { user } = formValue
   user.email = ''
@@ -178,6 +184,7 @@ const LoginWithGithub = async () => {
                   round
                   show-password-on="click"
                   placeholder="password"
+                  @keyup.enter="handleValidateClick"
                 >
                   <template #prefix>
                     <n-icon :component="Password20Regular" />

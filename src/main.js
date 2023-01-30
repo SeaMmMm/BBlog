@@ -1,3 +1,4 @@
+import 'animate.css' //引入animate.css
 import { createApp } from 'vue'
 import vue3SeamlessScroll from 'vue3-seamless-scroll'
 import naive from '../plugins/naive'
@@ -5,7 +6,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { USER_STORE } from './store/constant'
-import 'animate.css' //引入animate.css
 
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'

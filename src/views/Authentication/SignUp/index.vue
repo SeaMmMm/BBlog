@@ -23,6 +23,7 @@ import isStrongPassword from 'validator/es/lib/isStrongPassword'
 import { computed, h, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import sha1 from 'sha1'
 
 const formRef = ref(null)
 const store = useStore()
@@ -84,7 +85,7 @@ const handleValidateClick = e => {
       try {
         const { user } = await createAuthUserWithEmailAndPassword(
           formValue.user.email,
-          formValue.user.password
+          sha1(formValue.user.password)
         )
 
         await createUserDocumentFromAuth(user, {
@@ -211,6 +212,7 @@ const LoginWithGithub = async () => {
                   round
                   show-password-on="click"
                   placeholder="password"
+                  @keyup.enter="handleValidateClick"
                 >
                   <template #prefix>
                     <n-icon :component="Password20Regular" />

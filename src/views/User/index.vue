@@ -1,16 +1,16 @@
 <script setup>
 import IconComponent from '@/components/svgcomponent/IconComponent.vue'
 import { auth, signOutUser } from '@/utils/firebase'
+import { MessageOutlined, SettingOutlined } from '@vicons/antd'
+import { Blog } from '@vicons/carbon'
 import {
   CalendarOutline,
   FlashOutline,
   HelpCircleOutline,
   HomeOutline as HomeIcon
 } from '@vicons/ionicons5'
-import { MessageOutlined, SettingOutlined } from '@vicons/antd'
-import { Blog } from '@vicons/carbon'
 import { NIcon, useMessage } from 'naive-ui'
-import { h, onMounted, reactive } from 'vue'
+import { h, onMounted, reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
 const renderIcon = icon => {
@@ -18,6 +18,7 @@ const renderIcon = icon => {
 }
 
 const message = useMessage()
+const target = ref(null)
 const router = useRouter()
 const userInfo = reactive({
   displayName: null,
@@ -153,7 +154,7 @@ onMounted(() => {
         </div>
         <div class="user">
           <n-text strong type="default">{{
-            userInfo.email ? userInfo.email : userInfo.displayName
+            userInfo.displayName ? userInfo.displayName : userInfo.email
           }}</n-text>
           <n-dropdown trigger="click" :options="options" @select="handleSelect">
             <n-avatar
@@ -171,7 +172,8 @@ onMounted(() => {
         <n-menu :options="menuOptions" />
       </div>
       <div class="g-middle">
-        <router-view />
+        <router-view ref="target" />
+        <n-back-top :listen-to="target" />
       </div>
     </div>
   </div>

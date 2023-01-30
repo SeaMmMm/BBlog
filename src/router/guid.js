@@ -34,10 +34,12 @@ export const setUpRouter = router => {
   /* 一个返回布尔值的挂钩，该值指示用户是否已通过身份验证。 */
   const { isAuthenticated } = useAuth(auth)
 
-  /* 路由器挂钩。 */
+  // 全局前置路由守卫
   router.beforeEach((to, from) => {
     // 显示加载条
     loadingBar?.start()
+
+    /* 检查路由是否需要身份验证以及用户是否已通过身份验证。如果用户未通过身份验证，它将显示一条错误消息并将用户重定向到登录页面。 */
     if (to.meta.requiresAuth) {
       if (!isAuthenticated.value) {
         message.error('请登录')
@@ -46,8 +48,10 @@ export const setUpRouter = router => {
     }
   })
 
+  /* 全局后置路由守卫 */
   router.afterEach((to, from) => {
     setTitle(to)
+
     to.meta.transition = 'fade'
 
     /* 将在 2 秒后运行该函数的挂钩。 */

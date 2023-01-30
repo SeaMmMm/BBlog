@@ -39,7 +39,7 @@ const checkedDate = reactive({
 const theme = computed(() => store.getters[THEME_STORE.GET_MODEL])
 
 // const message = useMessage()
-const value = ref(addDays(Date.now(), 1).valueOf())
+const value = ref(addDays(Date.now(), 0).valueOf())
 const isDateDisabled = timestamp => {
   if (isYesterday(timestamp)) {
     return true

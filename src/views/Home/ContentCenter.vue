@@ -5,6 +5,7 @@ import TikTok from '@/assets/tictoc.png'
 import Wechat from '@/assets/wechat.png'
 import BlueCircle from '@/components/circle/BlueCircle.vue'
 import PurpleCircle from '@/components/circle/PurpleCircle.vue'
+import { KinesisContainer, KinesisElement } from 'vue-kinesis'
 
 import { Joget } from '@vicons/fa'
 import { Eye16Filled } from '@vicons/fluent'
@@ -78,7 +79,11 @@ watchEffect(() => {
           appear
           appear-active-class="animate__animated animate__zoomInDown"
         >
-          <n-p> Create Your Own Beautiful Blog </n-p>
+          <kinesis-container event="scroll">
+            <kinesis-element :strength="30">
+              <n-p> Create Your Own Beautiful Blog </n-p>
+            </kinesis-element>
+          </kinesis-container>
         </Transition>
         <BlueCircle class="bc" />
         <PurpleCircle class="pc" />
@@ -87,10 +92,15 @@ watchEffect(() => {
           appear
           appear-active-class="animate__animated animate__fadeInUp animate__delay-1s"
         >
-          <n-h1 :align-text="true">
-            There is no passion to be found playing small in settling for <br />
-            a life that is less than the one you are capable of living
-          </n-h1>
+          <kinesis-container event="scroll">
+            <kinesis-element :strength="50">
+              <n-h1 :align-text="true">
+                There is no passion to be found playing small in settling for
+                <br />
+                a life that is less than the one you are capable of living
+              </n-h1>
+            </kinesis-element>
+          </kinesis-container>
         </Transition>
         <Transition
           appear
@@ -108,7 +118,7 @@ watchEffect(() => {
       <n-image
         style="pointer-events: none"
         lazy
-        width="600"
+        width="520"
         :src="require('@/assets/man.png')"
       />
     </div>

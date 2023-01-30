@@ -24,7 +24,7 @@
  * @Author       : Seaming
  * @Date         : 2023-01-23
  * @LastEditors  : Seaming
- * @LastEditTime : 2023-01-25
+ * @LastEditTime : 2023-01-30
  * @FilePath     : /BBlog/src/utils/firebase.js
  * @Description  : firebase使用
  *
@@ -42,6 +42,7 @@ import {
   signInWithPopup,
   signOut
 } from 'firebase/auth'
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
 
 import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 
@@ -56,7 +57,9 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase
-initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig)
+
+const storage = getStorage(app)
 
 const googleProvider = new GoogleAuthProvider()
 const githubProvider = new GithubAuthProvider()
@@ -71,12 +74,25 @@ export const auth = getAuth()
 export const db = getFirestore()
 
 /**
- * 它返回一个承诺，解析为从 firebase 库调用 signInWithPopup 函数的结果，传入 auth 对象和 googleProvider 对象。
+ * UploadFile 获取一个文件并将其上传到 storageRef
+ */
+export const uploadFile = async png => {
+  const storageRef = ref(storage, `png/${png.name}`)
+  const metadata = {
+    contentType: png.type
+  }
+
+  const snapshot = await uploadBytes(storageRef, png, metadata)
+
+  console.log('uploadFile done', snapshot)
+}
+/**
+ * 它返回一个 Promise ，解析为从 firebase 库调用 signInWithPopup 函数的结果，传入 auth 对象和 googleProvider 对象。
  */
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 
 /**
- * 它返回一个承诺，该承诺解析为从 firebase 库调用 signInWithPopup 函数的结果，传入 auth 对象和 githubProvider 对象。
+ * 它返回一个 Promise ，该承诺解析为从 firebase 库调用 signInWithPopup 函数的结果，传入 auth 对象和 githubProvider 对象。
  */
 export const signInWithGithubPopup = () => signInWithPopup(auth, githubProvider)
 
@@ -116,14 +132,17 @@ export const createUserDocumentFromAuth = async (
 ) => {
   if (!userAuth) return
 
+  /* 它使用 userAuth 对象的 ID 创建对用户集合中文档的引用。 */
   const userDocRef = doc(db, 'users', userAuth.uid)
 
+  /* 它使用 userDocRef 获取用户文档的快照。 */
   const userSnapshot = await getDoc(userDocRef)
 
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth
     const createdAt = new Date()
 
+    /* 它使用 userDocRef 来设置具有 displayName、email 和 createdAt 属性的用户文档。它还使用扩展运算符添加作为参数传入的任何附加信息。 */
     await setDoc(userDocRef, {
       displayName,
       email,
