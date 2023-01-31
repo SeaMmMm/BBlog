@@ -158,11 +158,15 @@ onMounted(() => {
           }}</n-text>
           <n-dropdown trigger="click" :options="options" @select="handleSelect">
             <n-avatar
+              v-if="userInfo.avatar"
               style="cursor: pointer"
               round
               lazy
               :src="userInfo.avatar"
             />
+            <n-avatar v-else style="cursor: pointer" round lazy
+              >未设置
+            </n-avatar>
           </n-dropdown>
         </div>
       </div>
